@@ -21,6 +21,38 @@ if "usuario" not in st.session_state:
     st.session_state.usuario = None
 
 # LOGIN
+else:
+
+    # 🔧 SEED DE USUÁRIOS (TEMPORÁRIO)
+    if st.button("Criar usuários padrão"):
+        import sqlite3
+
+        conn = sqlite3.connect("banco.db")
+        cur = conn.cursor()
+
+        usuarios = [
+            ("admin", "123", 1),
+            ("Jullia", "123", 0),
+            ("Matheus", "123", 0),
+            ("Atila", "123", 0),
+            ("Rovilson", "123", 0)
+        ]
+
+        cur.executemany("""
+        INSERT OR IGNORE INTO usuarios (usuario, senha, admin)
+        VALUES (?, ?, ?)
+        """, usuarios)
+
+        conn.commit()
+        conn.close()
+
+        st.success("Usuários criados!")
+
+    menu = st.sidebar.radio(
+        "Menu",
+        ["Feed", "Agenda", "Admin"]
+    )
+
 if not st.session_state.logado:
 
     st.title("🏢 Portal da Empresa")
